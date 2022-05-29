@@ -10,6 +10,9 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.Avg;
+import org.elasticsearch.search.aggregations.metrics.Max;
+import org.elasticsearch.search.aggregations.metrics.Min;
+import org.elasticsearch.search.aggregations.metrics.Sum;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -799,7 +802,7 @@ public class ElasticSearchTest
      * }
      *
      * </pre>
-     *
+     * <p>
      * 程序结果：
      * <pre>
      *
@@ -934,6 +937,285 @@ public class ElasticSearchTest
                 System.out.println("--------平均价格：" + avgPrice1Value);
                 System.out.println("----------------");
             }
+            System.out.println("----------------------------------------");
+        }
+    }
+
+
+    /**
+     * 求每个颜色的最大价格、最小价格、平均价格和总价格
+     * 请求内容：
+     * <pre>
+     *
+     * GET /tvs/_search
+     * {
+     *   "query":
+     *   {
+     *     "match_all": {}
+     *   },
+     *   "size": 0,
+     *   "aggs":
+     *   {
+     *     "group_by_color":
+     *     {
+     *       "terms":
+     *       {
+     *         "field": "color"
+     *       },
+     *       "aggs":
+     *       {
+     *         "max_price":
+     *         {
+     *           "max":
+     *           {
+     *             "field": "price"
+     *           }
+     *         },
+     *         "min_price":
+     *         {
+     *           "min":
+     *           {
+     *             "field": "price"
+     *           }
+     *         },
+     *         "avg_price":
+     *         {
+     *           "avg":
+     *           {
+     *             "field": "price"
+     *           }
+     *         },
+     *         "sum_price":
+     *         {
+     *           "sum":
+     *           {
+     *             "field": "price"
+     *           }
+     *         }
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     * <p>
+     * 结果：
+     * <pre>
+     *
+     * {
+     *   "took" : 1,
+     *   "timed_out" : false,
+     *   "_shards" : {
+     *     "total" : 1,
+     *     "successful" : 1,
+     *     "skipped" : 0,
+     *     "failed" : 0
+     *   },
+     *   "hits" : {
+     *     "total" : {
+     *       "value" : 14,
+     *       "relation" : "eq"
+     *     },
+     *     "max_score" : null,
+     *     "hits" : [ ]
+     *   },
+     *   "aggregations" : {
+     *     "group_by_color" : {
+     *       "doc_count_error_upper_bound" : 0,
+     *       "sum_other_doc_count" : 0,
+     *       "buckets" : [
+     *         {
+     *           "key" : "红色",
+     *           "doc_count" : 5,
+     *           "max_price" : {
+     *             "value" : 8500.0
+     *           },
+     *           "min_price" : {
+     *             "value" : 1000.0
+     *           },
+     *           "avg_price" : {
+     *             "value" : 4300.0
+     *           },
+     *           "sum_price" : {
+     *             "value" : 21500.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "蓝色",
+     *           "doc_count" : 4,
+     *           "max_price" : {
+     *             "value" : 6100.0
+     *           },
+     *           "min_price" : {
+     *             "value" : 1500.0
+     *           },
+     *           "avg_price" : {
+     *             "value" : 3575.0
+     *           },
+     *           "sum_price" : {
+     *             "value" : 14300.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "绿色",
+     *           "doc_count" : 3,
+     *           "max_price" : {
+     *             "value" : 4500.0
+     *           },
+     *           "min_price" : {
+     *             "value" : 1200.0
+     *           },
+     *           "avg_price" : {
+     *             "value" : 2900.0
+     *           },
+     *           "sum_price" : {
+     *             "value" : 8700.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "白色",
+     *           "doc_count" : 1,
+     *           "max_price" : {
+     *             "value" : 2100.0
+     *           },
+     *           "min_price" : {
+     *             "value" : 2100.0
+     *           },
+     *           "avg_price" : {
+     *             "value" : 2100.0
+     *           },
+     *           "sum_price" : {
+     *             "value" : 2100.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "黑色",
+     *           "doc_count" : 1,
+     *           "max_price" : {
+     *             "value" : 4800.0
+     *           },
+     *           "min_price" : {
+     *             "value" : 4800.0
+     *           },
+     *           "avg_price" : {
+     *             "value" : 4800.0
+     *           },
+     *           "sum_price" : {
+     *             "value" : 4800.0
+     *           }
+     *         }
+     *       ]
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     * <p>
+     * 程序结果：
+     * <pre>
+     *
+     * ----key：红色
+     * ----doc_count：5
+     * ----group_by_brand：
+     * ----max_price：8500.0
+     * ----min_price：1000.0
+     * ----avg_price：4300.0
+     * ----sum_price：21500.0
+     * ----------------------------------------
+     * ----key：蓝色
+     * ----doc_count：4
+     * ----group_by_brand：
+     * ----max_price：6100.0
+     * ----min_price：1500.0
+     * ----avg_price：3575.0
+     * ----sum_price：14300.0
+     * ----------------------------------------
+     * ----key：绿色
+     * ----doc_count：3
+     * ----group_by_brand：
+     * ----max_price：4500.0
+     * ----min_price：1200.0
+     * ----avg_price：2900.0
+     * ----sum_price：8700.0
+     * ----------------------------------------
+     * ----key：白色
+     * ----doc_count：1
+     * ----group_by_brand：
+     * ----max_price：2100.0
+     * ----min_price：2100.0
+     * ----avg_price：2100.0
+     * ----sum_price：2100.0
+     * ----------------------------------------
+     * ----key：黑色
+     * ----doc_count：1
+     * ----group_by_brand：
+     * ----max_price：4800.0
+     * ----min_price：4800.0
+     * ----avg_price：4800.0
+     * ----sum_price：4800.0
+     * ----------------------------------------
+     *
+     * </pre>
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    void aggregation4() throws Exception
+    {
+        //构建请求
+        SearchRequest searchRequest = new SearchRequest("tvs");
+        //构建请求体
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //查询
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        //分页
+        searchSourceBuilder.size(0);
+        //聚合
+        searchSourceBuilder.aggregation(
+                AggregationBuilders.terms("group_by_colors").field("color")
+                        .subAggregations(AggregatorFactories.builder()
+                                .addAggregator(AggregationBuilders.max("max_price").field("price"))
+                                .addAggregator(AggregationBuilders.min("min_price").field("price"))
+                                .addAggregator(AggregationBuilders.avg("avg_price").field("price"))
+                                .addAggregator(AggregationBuilders.sum("sum_price").field("price")))
+        );
+
+        //放入到请求中
+        searchRequest.source(searchSourceBuilder);
+        //发起请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        //获取数据
+        //获取aggregations部分
+        Aggregations aggregations = searchResponse.getAggregations();
+        //获得group_by_colors
+        Terms group_by_colors = aggregations.get("group_by_colors");
+        //获取buckets部分
+        List<? extends Terms.Bucket> buckets = group_by_colors.getBuckets();
+        //遍历
+        for (Terms.Bucket bucket : buckets)
+        {
+            //获取数据
+            String key = (String) bucket.getKey();
+            long docCount = bucket.getDocCount();
+            Max max_price = bucket.getAggregations().get("max_price");
+            Min min_price = bucket.getAggregations().get("min_price");
+            Avg avg_price = bucket.getAggregations().get("avg_price");
+            Sum sum_price = bucket.getAggregations().get("sum_price");
+            double maxPriceValue = max_price.getValue();
+            double minPriceValue = min_price.getValue();
+            double avgPriceValue = avg_price.getValue();
+            double sumPriceValue = sum_price.getValue();
+
+            //打印
+            System.out.println("----key：" + key);
+            System.out.println("----doc_count：" + docCount);
+            System.out.println("----group_by_brand：");
+            System.out.println("----max_price：" + maxPriceValue);
+            System.out.println("----min_price：" + minPriceValue);
+            System.out.println("----avg_price：" + avgPriceValue);
+            System.out.println("----sum_price：" + sumPriceValue);
+
+
             System.out.println("----------------------------------------");
         }
     }
