@@ -12,6 +12,7 @@ import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.Avg;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -337,7 +338,7 @@ public class ElasticSearchTest
      * }
      *
      * </pre>
-     *
+     * <p>
      * 程序结果：
      * <pre>
      *
@@ -396,6 +397,180 @@ public class ElasticSearchTest
             System.out.println("----doc_count：" + docCount);
             System.out.println("----------------------------------------");
         }
+    }
 
+
+    /**
+     * 统计每种颜色电视平均价格
+     * <p>
+     * 请求内容：
+     * <pre>
+     *
+     * GET /tvs/_search
+     * {
+     *   "query":
+     *   {
+     *     "match_all": {}
+     *   },
+     *   "size": 0,
+     *   "aggs":
+     *   {
+     *     "group_by_colors":
+     *     {
+     *       "terms":
+     *       {
+     *         "field": "color"
+     *       },
+     *       "aggs": {
+     *         "avg_price":
+     *         {
+     *           "avg":
+     *           {
+     *             "field": "price"
+     *           }
+     *         }
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     *
+     *
+     * </pre>
+     * <p>
+     * 结果：
+     * <pre>
+     *
+     * {
+     *   "took" : 1,
+     *   "timed_out" : false,
+     *   "_shards" : {
+     *     "total" : 1,
+     *     "successful" : 1,
+     *     "skipped" : 0,
+     *     "failed" : 0
+     *   },
+     *   "hits" : {
+     *     "total" : {
+     *       "value" : 14,
+     *       "relation" : "eq"
+     *     },
+     *     "max_score" : null,
+     *     "hits" : [ ]
+     *   },
+     *   "aggregations" : {
+     *     "group_by_colors" : {
+     *       "doc_count_error_upper_bound" : 0,
+     *       "sum_other_doc_count" : 0,
+     *       "buckets" : [
+     *         {
+     *           "key" : "红色",
+     *           "doc_count" : 5,
+     *           "avg_price" : {
+     *             "value" : 4300.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "蓝色",
+     *           "doc_count" : 4,
+     *           "avg_price" : {
+     *             "value" : 3575.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "绿色",
+     *           "doc_count" : 3,
+     *           "avg_price" : {
+     *             "value" : 2900.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "白色",
+     *           "doc_count" : 1,
+     *           "avg_price" : {
+     *             "value" : 2100.0
+     *           }
+     *         },
+     *         {
+     *           "key" : "黑色",
+     *           "doc_count" : 1,
+     *           "avg_price" : {
+     *             "value" : 4800.0
+     *           }
+     *         }
+     *       ]
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     * <p>
+     * 程序结果：
+     * <pre>
+     *
+     * ----key：红色
+     * ----doc_count：5
+     * ----平均价格：4300.0
+     * ----------------------------------------
+     * ----key：蓝色
+     * ----doc_count：4
+     * ----平均价格：3575.0
+     * ----------------------------------------
+     * ----key：绿色
+     * ----doc_count：3
+     * ----平均价格：2900.0
+     * ----------------------------------------
+     * ----key：白色
+     * ----doc_count：1
+     * ----平均价格：2100.0
+     * ----------------------------------------
+     * ----key：黑色
+     * ----doc_count：1
+     * ----平均价格：4800.0
+     * ----------------------------------------
+     *
+     * </pre>
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    void aggregation2() throws Exception
+    {
+        //构建请求
+        SearchRequest searchRequest = new SearchRequest("tvs");
+        //构建请求体
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //查询
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        //分页
+        searchSourceBuilder.size(0);
+        //聚合
+        searchSourceBuilder.aggregation(AggregationBuilders.terms("group_by_colors").field("color")
+                .subAggregation(AggregationBuilders.avg("avg_price").field("price")));
+        //放入到请求中
+        searchRequest.source(searchSourceBuilder);
+        //发起请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        //获取数据
+        //获取aggregations部分
+        Aggregations aggregations = searchResponse.getAggregations();
+        //获得group_by_colors
+        Terms group_by_colors = aggregations.get("group_by_colors");
+        //获取buckets部分
+        List<? extends Terms.Bucket> buckets = group_by_colors.getBuckets();
+        //遍历
+        for (Terms.Bucket bucket : buckets)
+        {
+            //获取数据
+            String key = (String) bucket.getKey();
+            long docCount = bucket.getDocCount();
+            Avg avg_price = bucket.getAggregations().get("avg_price");
+            double avgPriceValue = avg_price.getValue();
+            //打印
+            System.out.println("----key：" + key);
+            System.out.println("----doc_count：" + docCount);
+            System.out.println("----平均价格：" + avgPriceValue);
+            System.out.println("----------------------------------------");
+        }
     }
 }
