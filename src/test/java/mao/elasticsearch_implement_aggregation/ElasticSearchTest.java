@@ -7,6 +7,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.*;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -22,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -1249,7 +1252,7 @@ public class ElasticSearchTest
      * }
      *
      * </pre>
-     *
+     * <p>
      * 结果：
      * <pre>
      *
@@ -1299,7 +1302,7 @@ public class ElasticSearchTest
      * }
      *
      * </pre>
-     *
+     * <p>
      * 程序结果：
      * <pre>
      *
@@ -1321,7 +1324,7 @@ public class ElasticSearchTest
      *
      * </pre>
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
     @Test
     void aggregation5() throws Exception
@@ -1355,6 +1358,227 @@ public class ElasticSearchTest
         {
             //获取数据
             Double key = (Double) bucket.getKey();
+            long docCount = bucket.getDocCount();
+            //打印
+            System.out.println("----key：" + key);
+            System.out.println("----doc_count：" + docCount);
+            System.out.println("----------------------------------------");
+        }
+    }
+
+
+    /**
+     * 搜索与聚合结合，查询某个品牌按颜色销量
+     * <p>
+     * 请求内容：
+     * <pre>
+     *
+     * GET /tvs/_search
+     * {
+     *   "query":
+     *   {
+     *     "match":
+     *     {
+     *       "brand": "小米"
+     *     }
+     *   },
+     *   "aggs": {
+     *     "group_by_color":
+     *     {
+     *       "terms":
+     *       {
+     *         "field": "color"
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     * <p>
+     * 结果：
+     * <pre>
+     *
+     * {
+     *   "took" : 1,
+     *   "timed_out" : false,
+     *   "_shards" : {
+     *     "total" : 1,
+     *     "successful" : 1,
+     *     "skipped" : 0,
+     *     "failed" : 0
+     *   },
+     *   "hits" : {
+     *     "total" : {
+     *       "value" : 5,
+     *       "relation" : "eq"
+     *     },
+     *     "max_score" : 1.0033021,
+     *     "hits" : [
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "7aouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 3000,
+     *           "color" : "绿色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2019-05-18"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "8qouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 2500,
+     *           "color" : "蓝色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-02-12"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "86ouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 4500,
+     *           "color" : "绿色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-04-22"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "9qouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 8500,
+     *           "color" : "红色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-05-19"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "-KouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 4800,
+     *           "color" : "黑色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-06-10"
+     *         }
+     *       }
+     *     ]
+     *   },
+     *   "aggregations" : {
+     *     "group_by_color" : {
+     *       "doc_count_error_upper_bound" : 0,
+     *       "sum_other_doc_count" : 0,
+     *       "buckets" : [
+     *         {
+     *           "key" : "绿色",
+     *           "doc_count" : 2
+     *         },
+     *         {
+     *           "key" : "红色",
+     *           "doc_count" : 1
+     *         },
+     *         {
+     *           "key" : "蓝色",
+     *           "doc_count" : 1
+     *         },
+     *         {
+     *           "key" : "黑色",
+     *           "doc_count" : 1
+     *         }
+     *       ]
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     *
+     * 程序结果：
+     * <pre>
+     *
+     * --数量：5
+     * --数组数量：5
+     * --最大分数：1.0033021
+     * -->{color=绿色, price=3000, sold_date=2019-05-18, brand=小米}
+     * -->{color=蓝色, price=2500, sold_date=2020-02-12, brand=小米}
+     * -->{color=绿色, price=4500, sold_date=2020-04-22, brand=小米}
+     * -->{color=红色, price=8500, sold_date=2020-05-19, brand=小米}
+     * -->{color=黑色, price=4800, sold_date=2020-06-10, brand=小米}
+     *
+     * 聚合结果：
+     *
+     * ----key：绿色
+     * ----doc_count：2
+     * ----------------------------------------
+     * ----key：红色
+     * ----doc_count：1
+     * ----------------------------------------
+     * ----key：蓝色
+     * ----doc_count：1
+     * ----------------------------------------
+     * ----key：黑色
+     * ----doc_count：1
+     * ----------------------------------------
+     *
+     * </pre>
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    void aggregation6() throws Exception
+    {
+        //构建请求
+        SearchRequest searchRequest = new SearchRequest("tvs");
+        //构建请求体
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //查询
+        searchSourceBuilder.query(QueryBuilders.matchQuery("brand", "小米"));
+        //分页
+        //searchSourceBuilder.size(0);
+        //聚合
+        searchSourceBuilder.aggregation(
+                AggregationBuilders.terms("group_by_color").field("color")
+        );
+
+        //放入到请求中
+        searchRequest.source(searchSourceBuilder);
+        //发起请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        //获取数据
+        //获得hits
+        SearchHits hits = searchResponse.getHits();
+        long value = hits.getTotalHits().value;
+        float maxScore = hits.getMaxScore();
+        SearchHit[] hitsHits = hits.getHits();
+        System.out.println("--数量：" + value);
+        System.out.println("--数组数量："+hitsHits.length);
+        System.out.println("--最大分数：" + maxScore);
+        for (SearchHit hitsHit : hitsHits)
+        {
+            Map<String, Object> sourceAsMap = hitsHit.getSourceAsMap();
+            System.out.println("-->" + sourceAsMap);
+        }
+        System.out.println();
+        System.out.println("聚合结果：");
+        System.out.println();
+
+        //获取aggregations部分
+        Aggregations aggregations = searchResponse.getAggregations();
+        //获得group_by_color
+        Terms histogram_price = aggregations.get("group_by_color");
+        //获取buckets部分
+        List<? extends Terms.Bucket> buckets = histogram_price.getBuckets();
+        //遍历
+        for (Terms.Bucket bucket : buckets)
+        {
+            //获取数据
+            String key = (String) bucket.getKey();
             long docCount = bucket.getDocCount();
             //打印
             System.out.println("----key：" + key);
