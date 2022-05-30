@@ -2235,4 +2235,348 @@ public class ElasticSearchTest
             System.out.println("----------------------------------------");
         }
     }
+
+
+    /**
+     * 按每种颜色的每种品牌平均销售额降序排序
+     * <p>
+     * 请求内容：
+     * <pre>
+     *
+     * GET /tvs/_search
+     * {
+     *   "query":
+     *   {
+     *     "match_all": {}
+     *   },
+     *   "size": 0,
+     *   "aggs":
+     *   {
+     *     "group_by_color":
+     *     {
+     *       "terms":
+     *       {
+     *         "field": "color"
+     *
+     *       },
+     *       "aggs":
+     *       {
+     *         "group_by_brand":
+     *         {
+     *           "terms":
+     *           {
+     *             "field": "brand",
+     *             "order":
+     *             {
+     *               "avg_price": "desc"
+     *             }
+     *           },
+     *           "aggs":
+     *           {
+     *             "avg_price":
+     *             {
+     *               "avg":
+     *               {
+     *                 "field": "price"
+     *               }
+     *             }
+     *           }
+     *         }
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     * <p>
+     * 结果：
+     * <pre>
+     *
+     * {
+     *   "took" : 2,
+     *   "timed_out" : false,
+     *   "_shards" : {
+     *     "total" : 1,
+     *     "successful" : 1,
+     *     "skipped" : 0,
+     *     "failed" : 0
+     *   },
+     *   "hits" : {
+     *     "total" : {
+     *       "value" : 14,
+     *       "relation" : "eq"
+     *     },
+     *     "max_score" : null,
+     *     "hits" : [ ]
+     *   },
+     *   "aggregations" : {
+     *     "group_by_color" : {
+     *       "doc_count_error_upper_bound" : 0,
+     *       "sum_other_doc_count" : 0,
+     *       "buckets" : [
+     *         {
+     *           "key" : "红色",
+     *           "doc_count" : 5,
+     *           "group_by_brand" : {
+     *             "doc_count_error_upper_bound" : 0,
+     *             "sum_other_doc_count" : 0,
+     *             "buckets" : [
+     *               {
+     *                 "key" : "小米",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 8500.0
+     *                 }
+     *               },
+     *               {
+     *                 "key" : "三星",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 8000.0
+     *                 }
+     *               },
+     *               {
+     *                 "key" : "长虹",
+     *                 "doc_count" : 3,
+     *                 "avg_price" : {
+     *                   "value" : 1666.6666666666667
+     *                 }
+     *               }
+     *             ]
+     *           }
+     *         },
+     *         {
+     *           "key" : "蓝色",
+     *           "doc_count" : 4,
+     *           "group_by_brand" : {
+     *             "doc_count_error_upper_bound" : 0,
+     *             "sum_other_doc_count" : 0,
+     *             "buckets" : [
+     *               {
+     *                 "key" : "三星",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 6100.0
+     *                 }
+     *               },
+     *               {
+     *                 "key" : "长虹",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 4200.0
+     *                 }
+     *               },
+     *               {
+     *                 "key" : "小米",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 2500.0
+     *                 }
+     *               },
+     *               {
+     *                 "key" : "TCL",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 1500.0
+     *                 }
+     *               }
+     *             ]
+     *           }
+     *         },
+     *         {
+     *           "key" : "绿色",
+     *           "doc_count" : 3,
+     *           "group_by_brand" : {
+     *             "doc_count_error_upper_bound" : 0,
+     *             "sum_other_doc_count" : 0,
+     *             "buckets" : [
+     *               {
+     *                 "key" : "小米",
+     *                 "doc_count" : 2,
+     *                 "avg_price" : {
+     *                   "value" : 3750.0
+     *                 }
+     *               },
+     *               {
+     *                 "key" : "TCL",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 1200.0
+     *                 }
+     *               }
+     *             ]
+     *           }
+     *         },
+     *         {
+     *           "key" : "白色",
+     *           "doc_count" : 1,
+     *           "group_by_brand" : {
+     *             "doc_count_error_upper_bound" : 0,
+     *             "sum_other_doc_count" : 0,
+     *             "buckets" : [
+     *               {
+     *                 "key" : "TCL",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 2100.0
+     *                 }
+     *               }
+     *             ]
+     *           }
+     *         },
+     *         {
+     *           "key" : "黑色",
+     *           "doc_count" : 1,
+     *           "group_by_brand" : {
+     *             "doc_count_error_upper_bound" : 0,
+     *             "sum_other_doc_count" : 0,
+     *             "buckets" : [
+     *               {
+     *                 "key" : "小米",
+     *                 "doc_count" : 1,
+     *                 "avg_price" : {
+     *                   "value" : 4800.0
+     *                 }
+     *               }
+     *             ]
+     *           }
+     *         }
+     *       ]
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     * <p>
+     * 程序结果：
+     * <pre>
+     *
+     * ----key：红色
+     * ----doc_count：5
+     * group_by_brand：
+     * --------key：红色
+     * --------doc_count：5
+     * --------avg_price：8500.0
+     * -----------------------------
+     * --------key：红色
+     * --------doc_count：5
+     * --------avg_price：8000.0
+     * -----------------------------
+     * --------key：红色
+     * --------doc_count：5
+     * --------avg_price：1666.6666666666667
+     * -----------------------------
+     * ----------------------------------------
+     * ----key：蓝色
+     * ----doc_count：4
+     * group_by_brand：
+     * --------key：蓝色
+     * --------doc_count：4
+     * --------avg_price：6100.0
+     * -----------------------------
+     * --------key：蓝色
+     * --------doc_count：4
+     * --------avg_price：4200.0
+     * -----------------------------
+     * --------key：蓝色
+     * --------doc_count：4
+     * --------avg_price：2500.0
+     * -----------------------------
+     * --------key：蓝色
+     * --------doc_count：4
+     * --------avg_price：1500.0
+     * -----------------------------
+     * ----------------------------------------
+     * ----key：绿色
+     * ----doc_count：3
+     * group_by_brand：
+     * --------key：绿色
+     * --------doc_count：3
+     * --------avg_price：3750.0
+     * -----------------------------
+     * --------key：绿色
+     * --------doc_count：3
+     * --------avg_price：1200.0
+     * -----------------------------
+     * ----------------------------------------
+     * ----key：白色
+     * ----doc_count：1
+     * group_by_brand：
+     * --------key：白色
+     * --------doc_count：1
+     * --------avg_price：2100.0
+     * -----------------------------
+     * ----------------------------------------
+     * ----key：黑色
+     * ----doc_count：1
+     * group_by_brand：
+     * --------key：黑色
+     * --------doc_count：1
+     * --------avg_price：4800.0
+     * -----------------------------
+     * ----------------------------------------
+     *
+     * </pre>
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    void aggregation10() throws Exception
+    {
+        //构建请求
+        SearchRequest searchRequest = new SearchRequest("tvs");
+        //构建请求体
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //查询
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        //分页
+        searchSourceBuilder.size(0);
+        //聚合
+        searchSourceBuilder.aggregation(
+                AggregationBuilders.terms("group_by_color").field("color")
+                        .subAggregation(AggregationBuilders.terms("group_by_brand").field("brand")
+                                .order(BucketOrder.aggregation("avg_price", false))
+                                .subAggregation(AggregationBuilders.avg("avg_price").field("price")))
+        );
+
+        //放入到请求中
+        searchRequest.source(searchSourceBuilder);
+        //发起请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        //获取数据
+        //获取aggregations部分
+        Aggregations aggregations = searchResponse.getAggregations();
+        //获得group_by_color
+        Terms group_by_color = aggregations.get("group_by_color");
+        //获取buckets部分
+        List<? extends Terms.Bucket> buckets = group_by_color.getBuckets();
+        //遍历
+        for (Terms.Bucket bucket : buckets)
+        {
+            //获取数据
+            String key = (String) bucket.getKey();
+            long docCount = bucket.getDocCount();
+            Terms group_by_brand = bucket.getAggregations().get("group_by_brand");
+            List<? extends Terms.Bucket> buckets1 = group_by_brand.getBuckets();
+            //打印
+            System.out.println("----key：" + key);
+            System.out.println("----doc_count：" + docCount);
+            System.out.println("group_by_brand：");
+            for (Terms.Bucket bucket1 : buckets1)
+            {
+                //获取数据
+                //获取数据
+                String key1 = (String) bucket1.getKey();
+                long docCount1 = bucket1.getDocCount();
+                Avg avg_price1 = bucket1.getAggregations().get("avg_price");
+                double avgPrice1Value = avg_price1.getValue();
+                //打印
+                System.out.println("--------key：" + key);
+                System.out.println("--------doc_count：" + docCount);
+                System.out.println("--------avg_price：" + avgPrice1Value);
+                System.out.println("-----------------------------");
+            }
+            System.out.println("----------------------------------------");
+        }
+    }
 }
