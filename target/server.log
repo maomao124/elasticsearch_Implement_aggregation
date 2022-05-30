@@ -1,0 +1,20 @@
+2022-05-30 18:59:43.427  INFO 20468 --- [main] ticsearchImplementAggregationApplication : Starting ElasticsearchImplementAggregationApplication v0.0.1-SNAPSHOT using Java 16.0.2 on mao with PID 20468 (H:\程序\大三下期\elasticsearch实现聚合功能\target\elasticsearch_Implement_aggregation-0.0.1-SNAPSHOT.jar started by mao in H:\程序\大三下期\elasticsearch实现聚合功能\target)
+2022-05-30 18:59:43.430 DEBUG 20468 --- [main] ticsearchImplementAggregationApplication : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 18:59:43.430  INFO 20468 --- [main] ticsearchImplementAggregationApplication : The following 1 profile is active: "dev"
+2022-05-30 18:59:44.574  INFO 20468 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-05-30 18:59:44.586  INFO 20468 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-05-30 18:59:44.586  INFO 20468 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.63]
+2022-05-30 18:59:44.677  INFO 20468 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-05-30 18:59:44.678  INFO 20468 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1186 ms
+2022-05-30 18:59:45.549  INFO 20468 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-05-30 18:59:45.563  INFO 20468 --- [main] ticsearchImplementAggregationApplication : Started ElasticsearchImplementAggregationApplication in 2.74 seconds (JVM running for 3.233)
+2022-05-30 19:00:19.061  INFO 11708 --- [main] ticsearchImplementAggregationApplication : Starting ElasticsearchImplementAggregationApplication v0.0.1-SNAPSHOT using Java 16.0.2 on mao with PID 11708 (H:\程序\大三下期\elasticsearch实现聚合功能\target\elasticsearch_Implement_aggregation-0.0.1-SNAPSHOT.jar started by mao in H:\程序\大三下期\elasticsearch实现聚合功能\target)
+2022-05-30 19:00:19.065 DEBUG 11708 --- [main] ticsearchImplementAggregationApplication : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 19:00:19.066  INFO 11708 --- [main] ticsearchImplementAggregationApplication : The following 1 profile is active: "dev"
+2022-05-30 19:00:20.233  INFO 11708 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-05-30 19:00:20.244  INFO 11708 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-05-30 19:00:20.244  INFO 11708 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.63]
+2022-05-30 19:00:20.322  INFO 11708 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-05-30 19:00:20.323  INFO 11708 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1187 ms
+2022-05-30 19:00:21.173  INFO 11708 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-05-30 19:00:21.187  INFO 11708 --- [main] ticsearchImplementAggregationApplication : Started ElasticsearchImplementAggregationApplication in 2.726 seconds (JVM running for 3.217)
