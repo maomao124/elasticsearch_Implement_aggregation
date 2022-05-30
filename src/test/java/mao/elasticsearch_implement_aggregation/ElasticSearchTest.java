@@ -1801,7 +1801,260 @@ public class ElasticSearchTest
         Avg all_brand_avg_price = all.getAggregations().get("all_brand_avg_price");
         double all_brand_avg_priceValue = all_brand_avg_price.getValue();
         System.out.println("----所有品牌销售平均价格："+all_brand_avg_priceValue);
-
-
     }
+
+
+    /**
+     * 统计价格大于1200的电视平均价格
+     *
+     * 请求内容：
+     * <pre>
+     *
+     * GET /tvs/_search
+     * {
+     *   "query":
+     *   {
+     *     "constant_score":
+     *     {
+     *       "filter":
+     *       {
+     *         "range":
+     *         {
+     *           "price":
+     *           {
+     *             "gte": 1200
+     *           }
+     *         }
+     *       }
+     *     }
+     *   },
+     *   "aggs":
+     *   {
+     *     "avg_price":
+     *     {
+     *       "avg":
+     *       {
+     *         "field": "price"
+     *       }
+     *     }
+     *   }
+     *
+     * }
+     *
+     * </pre>
+     *
+     * 结果：
+     * <pre>
+     *
+     * {
+     *   "took" : 0,
+     *   "timed_out" : false,
+     *   "_shards" : {
+     *     "total" : 1,
+     *     "successful" : 1,
+     *     "skipped" : 0,
+     *     "failed" : 0
+     *   },
+     *   "hits" : {
+     *     "total" : {
+     *       "value" : 13,
+     *       "relation" : "eq"
+     *     },
+     *     "max_score" : 1.0,
+     *     "hits" : [
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "7KouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 2000,
+     *           "color" : "红色",
+     *           "brand" : "长虹",
+     *           "sold_date" : "2019-11-05"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "7aouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 3000,
+     *           "color" : "绿色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2019-05-18"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "7qouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 1500,
+     *           "color" : "蓝色",
+     *           "brand" : "TCL",
+     *           "sold_date" : "2019-07-02"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "76ouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 1200,
+     *           "color" : "绿色",
+     *           "brand" : "TCL",
+     *           "sold_date" : "2019-08-19"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "8KouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 2000,
+     *           "color" : "红色",
+     *           "brand" : "长虹",
+     *           "sold_date" : "2019-11-05"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "8aouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 8000,
+     *           "color" : "红色",
+     *           "brand" : "三星",
+     *           "sold_date" : "2020-01-01"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "8qouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 2500,
+     *           "color" : "蓝色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-02-12"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "86ouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 4500,
+     *           "color" : "绿色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-04-22"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "9KouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 6100,
+     *           "color" : "蓝色",
+     *           "brand" : "三星",
+     *           "sold_date" : "2020-05-16"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "9aouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0,
+     *         "_source" : {
+     *           "price" : 2100,
+     *           "color" : "白色",
+     *           "brand" : "TCL",
+     *           "sold_date" : "2020-05-17"
+     *         }
+     *       }
+     *     ]
+     *   },
+     *   "aggregations" : {
+     *     "avg_price" : {
+     *       "value" : 3876.923076923077
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     *
+     * 程序结果：
+     * <pre>
+     *
+     * --数量：13
+     * --数组数量：10
+     * --最大分数：1.0
+     * -->{color=红色, price=2000, sold_date=2019-11-05, brand=长虹}
+     * -->{color=绿色, price=3000, sold_date=2019-05-18, brand=小米}
+     * -->{color=蓝色, price=1500, sold_date=2019-07-02, brand=TCL}
+     * -->{color=绿色, price=1200, sold_date=2019-08-19, brand=TCL}
+     * -->{color=红色, price=2000, sold_date=2019-11-05, brand=长虹}
+     * -->{color=红色, price=8000, sold_date=2020-01-01, brand=三星}
+     * -->{color=蓝色, price=2500, sold_date=2020-02-12, brand=小米}
+     * -->{color=绿色, price=4500, sold_date=2020-04-22, brand=小米}
+     * -->{color=蓝色, price=6100, sold_date=2020-05-16, brand=三星}
+     * -->{color=白色, price=2100, sold_date=2020-05-17, brand=TCL}
+     *
+     * 聚合结果：
+     *
+     * 大于1200元的平均价格：3876.923076923077
+     *
+     * </pre>
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    void aggregation8() throws Exception
+    {
+        //构建请求
+        SearchRequest searchRequest = new SearchRequest("tvs");
+        //构建请求体
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //查询
+        searchSourceBuilder.query(QueryBuilders.constantScoreQuery(QueryBuilders.rangeQuery("price").gte(1200)));
+        //分页
+        //searchSourceBuilder.size(0);
+        //聚合
+        searchSourceBuilder.aggregation(
+                AggregationBuilders.avg("avg_price").field("price")
+        );
+
+        //放入到请求中
+        searchRequest.source(searchSourceBuilder);
+        //发起请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        //获取数据
+        //获得hits
+        SearchHits hits = searchResponse.getHits();
+        long value = hits.getTotalHits().value;
+        float maxScore = hits.getMaxScore();
+        SearchHit[] hitsHits = hits.getHits();
+        System.out.println("--数量：" + value);
+        System.out.println("--数组数量：" + hitsHits.length);
+        System.out.println("--最大分数：" + maxScore);
+        for (SearchHit hitsHit : hitsHits)
+        {
+            Map<String, Object> sourceAsMap = hitsHit.getSourceAsMap();
+            System.out.println("-->" + sourceAsMap);
+        }
+        System.out.println();
+        System.out.println("聚合结果：");
+        System.out.println();
+
+        //获取aggregations部分
+        Aggregations aggregations = searchResponse.getAggregations();
+        //获得avg_price
+        Avg avg_price = aggregations.get("avg_price");
+        double avg_priceValue = avg_price.getValue();
+        System.out.println("大于1200元的平均价格："+avg_priceValue);
+    }
+
+
+
+    
 }
