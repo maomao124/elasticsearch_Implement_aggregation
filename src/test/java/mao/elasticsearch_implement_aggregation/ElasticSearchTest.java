@@ -10,6 +10,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.*;
+import org.elasticsearch.search.aggregations.bucket.global.Global;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.Avg;
@@ -1498,7 +1499,7 @@ public class ElasticSearchTest
      * }
      *
      * </pre>
-     *
+     * <p>
      * 程序结果：
      * <pre>
      *
@@ -1557,7 +1558,7 @@ public class ElasticSearchTest
         float maxScore = hits.getMaxScore();
         SearchHit[] hitsHits = hits.getHits();
         System.out.println("--数量：" + value);
-        System.out.println("--数组数量："+hitsHits.length);
+        System.out.println("--数组数量：" + hitsHits.length);
         System.out.println("--最大分数：" + maxScore);
         for (SearchHit hitsHit : hitsHits)
         {
@@ -1585,5 +1586,222 @@ public class ElasticSearchTest
             System.out.println("----doc_count：" + docCount);
             System.out.println("----------------------------------------");
         }
+    }
+
+
+    /**
+     * 单个品牌与所有品牌销量对比
+     * <p>
+     * 请求内容：
+     * <pre>
+     *
+     * GET /tvs/_search
+     * {
+     *   "query":
+     *   {
+     *     "term":
+     *     {
+     *       "brand":
+     *       {
+     *         "value": "小米"
+     *       }
+     *     }
+     *   },
+     *   "aggs":
+     *   {
+     *     "single_brand_avg_price":
+     *     {
+     *       "avg":
+     *       {
+     *         "field": "price"
+     *       }
+     *     },
+     *     "all":
+     *     {
+     *       "global":
+     *       {
+     *
+     *       },
+     *       "aggs":
+     *       {
+     *         "all_brand_avg_price":
+     *         {
+     *           "avg":
+     *           {
+     *             "field": "price"
+     *           }
+     *         }
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     *
+     * 结果：
+     * <pre>
+     *
+     * {
+     *   "took" : 2,
+     *   "timed_out" : false,
+     *   "_shards" : {
+     *     "total" : 1,
+     *     "successful" : 1,
+     *     "skipped" : 0,
+     *     "failed" : 0
+     *   },
+     *   "hits" : {
+     *     "total" : {
+     *       "value" : 5,
+     *       "relation" : "eq"
+     *     },
+     *     "max_score" : 1.0033021,
+     *     "hits" : [
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "7aouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 3000,
+     *           "color" : "绿色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2019-05-18"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "8qouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 2500,
+     *           "color" : "蓝色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-02-12"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "86ouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 4500,
+     *           "color" : "绿色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-04-22"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "9qouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 8500,
+     *           "color" : "红色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-05-19"
+     *         }
+     *       },
+     *       {
+     *         "_index" : "tvs",
+     *         "_id" : "-KouDoEBEpQthbP41cfj",
+     *         "_score" : 1.0033021,
+     *         "_source" : {
+     *           "price" : 4800,
+     *           "color" : "黑色",
+     *           "brand" : "小米",
+     *           "sold_date" : "2020-06-10"
+     *         }
+     *       }
+     *     ]
+     *   },
+     *   "aggregations" : {
+     *     "all" : {
+     *       "doc_count" : 14,
+     *       "all_brand_avg_price" : {
+     *         "value" : 3671.4285714285716
+     *       }
+     *     },
+     *     "single_brand_avg_price" : {
+     *       "value" : 4660.0
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     *
+     * 程序结果：
+     * <pre>
+     *
+     * --数量：5
+     * --数组数量：5
+     * --最大分数：1.0033021
+     * -->{color=绿色, price=3000, sold_date=2019-05-18, brand=小米}
+     * -->{color=蓝色, price=2500, sold_date=2020-02-12, brand=小米}
+     * -->{color=绿色, price=4500, sold_date=2020-04-22, brand=小米}
+     * -->{color=红色, price=8500, sold_date=2020-05-19, brand=小米}
+     * -->{color=黑色, price=4800, sold_date=2020-06-10, brand=小米}
+     *
+     * 聚合结果：
+     *
+     * ----小米销售平均价格：4660.0
+     * ---所有品牌销售总数：14
+     * ----所有品牌销售平均价格：3671.4285714285716
+     *
+     * </pre>
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    void aggregation7() throws Exception
+    {
+        //构建请求
+        SearchRequest searchRequest = new SearchRequest("tvs");
+        //构建请求体
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //查询
+        searchSourceBuilder.query(QueryBuilders.termQuery("brand", "小米"));
+        //分页
+        //searchSourceBuilder.size(0);
+        //聚合
+        searchSourceBuilder.aggregation((AggregationBuilders.avg("single_brand_avg_price").field("price")))
+                .aggregation(AggregationBuilders.global("all")
+                        .subAggregation(AggregationBuilders.avg("all_brand_avg_price").field("price")));
+
+        //放入到请求中
+        searchRequest.source(searchSourceBuilder);
+        //发起请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        //获取数据
+        //获得hits
+        SearchHits hits = searchResponse.getHits();
+        long value = hits.getTotalHits().value;
+        float maxScore = hits.getMaxScore();
+        SearchHit[] hitsHits = hits.getHits();
+        System.out.println("--数量：" + value);
+        System.out.println("--数组数量：" + hitsHits.length);
+        System.out.println("--最大分数：" + maxScore);
+        for (SearchHit hitsHit : hitsHits)
+        {
+            Map<String, Object> sourceAsMap = hitsHit.getSourceAsMap();
+            System.out.println("-->" + sourceAsMap);
+        }
+        System.out.println();
+        System.out.println("聚合结果：");
+        System.out.println();
+
+        //获取aggregations部分
+        Aggregations aggregations = searchResponse.getAggregations();
+        //获得single_brand_avg_price
+        Avg single_brand_avg_price = aggregations.get("single_brand_avg_price");
+        double single_brand_avg_priceValue = single_brand_avg_price.getValue();
+        System.out.println("----小米销售平均价格："+single_brand_avg_priceValue);
+        Global all = aggregations.get("all");
+        long docCount = all.getDocCount();
+        System.out.println("---所有品牌销售总数："+docCount);
+        Avg all_brand_avg_price = all.getAggregations().get("all_brand_avg_price");
+        double all_brand_avg_priceValue = all_brand_avg_price.getValue();
+        System.out.println("----所有品牌销售平均价格："+all_brand_avg_priceValue);
+
+
     }
 }

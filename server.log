@@ -46,3 +46,27 @@
 2022-05-30 17:05:17.822 DEBUG 7048 --- [main] m.e.ElasticSearchTest                    : Running with Spring Boot v2.7.0, Spring v5.3.20
 2022-05-30 17:05:17.822  INFO 7048 --- [main] m.e.ElasticSearchTest                    : The following 1 profile is active: "dev"
 2022-05-30 17:05:19.488  INFO 7048 --- [main] m.e.ElasticSearchTest                    : Started ElasticSearchTest in 2.04 seconds (JVM running for 3.688)
+2022-05-30 17:17:19.150  INFO 7080 --- [main] m.e.ElasticSearchTest                    : Starting ElasticSearchTest using Java 16.0.2 on mao with PID 7080 (started by mao in H:\程序\大三下期\elasticsearch实现聚合功能)
+2022-05-30 17:17:19.151 DEBUG 7080 --- [main] m.e.ElasticSearchTest                    : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 17:17:19.151  INFO 7080 --- [main] m.e.ElasticSearchTest                    : The following 1 profile is active: "dev"
+2022-05-30 17:17:20.902  INFO 7080 --- [main] m.e.ElasticSearchTest                    : Started ElasticSearchTest in 2.151 seconds (JVM running for 3.825)
+2022-05-30 17:24:35.473  INFO 3592 --- [main] m.e.ElasticSearchTest                    : Starting ElasticSearchTest using Java 16.0.2 on mao with PID 3592 (started by mao in H:\程序\大三下期\elasticsearch实现聚合功能)
+2022-05-30 17:24:35.475 DEBUG 3592 --- [main] m.e.ElasticSearchTest                    : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 17:24:35.475  INFO 3592 --- [main] m.e.ElasticSearchTest                    : The following 1 profile is active: "dev"
+2022-05-30 17:24:37.190  INFO 3592 --- [main] m.e.ElasticSearchTest                    : Started ElasticSearchTest in 2.101 seconds (JVM running for 3.798)
+2022-05-30 17:31:32.040  INFO 12880 --- [main] m.e.ElasticSearchTest                    : Starting ElasticSearchTest using Java 16.0.2 on mao with PID 12880 (started by mao in H:\程序\大三下期\elasticsearch实现聚合功能)
+2022-05-30 17:31:32.041 DEBUG 12880 --- [main] m.e.ElasticSearchTest                    : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 17:31:32.042  INFO 12880 --- [main] m.e.ElasticSearchTest                    : The following 1 profile is active: "dev"
+2022-05-30 17:31:33.601  INFO 12880 --- [main] m.e.ElasticSearchTest                    : Started ElasticSearchTest in 1.931 seconds (JVM running for 3.595)
+2022-05-30 17:35:08.813  INFO 18276 --- [main] m.e.ElasticSearchTest                    : Starting ElasticSearchTest using Java 16.0.2 on mao with PID 18276 (started by mao in H:\程序\大三下期\elasticsearch实现聚合功能)
+2022-05-30 17:35:08.814 DEBUG 18276 --- [main] m.e.ElasticSearchTest                    : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 17:35:08.814  INFO 18276 --- [main] m.e.ElasticSearchTest                    : The following 1 profile is active: "dev"
+2022-05-30 17:35:10.465  INFO 18276 --- [main] m.e.ElasticSearchTest                    : Started ElasticSearchTest in 2.014 seconds (JVM running for 3.661)
+2022-05-30 17:38:43.912  INFO 20356 --- [main] m.e.ElasticSearchTest                    : Starting ElasticSearchTest using Java 16.0.2 on mao with PID 20356 (started by mao in H:\程序\大三下期\elasticsearch实现聚合功能)
+2022-05-30 17:38:43.914 DEBUG 20356 --- [main] m.e.ElasticSearchTest                    : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 17:38:43.914  INFO 20356 --- [main] m.e.ElasticSearchTest                    : The following 1 profile is active: "dev"
+2022-05-30 17:38:45.607  INFO 20356 --- [main] m.e.ElasticSearchTest                    : Started ElasticSearchTest in 2.071 seconds (JVM running for 3.795)
+2022-05-30 17:38:58.980  INFO 16372 --- [main] m.e.ElasticSearchTest                    : Starting ElasticSearchTest using Java 16.0.2 on mao with PID 16372 (started by mao in H:\程序\大三下期\elasticsearch实现聚合功能)
+2022-05-30 17:38:58.982 DEBUG 16372 --- [main] m.e.ElasticSearchTest                    : Running with Spring Boot v2.7.0, Spring v5.3.20
+2022-05-30 17:38:58.982  INFO 16372 --- [main] m.e.ElasticSearchTest                    : The following 1 profile is active: "dev"
+2022-05-30 17:39:00.642  INFO 16372 --- [main] m.e.ElasticSearchTest                    : Started ElasticSearchTest in 2.029 seconds (JVM running for 3.655)
