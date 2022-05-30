@@ -8,6 +8,7 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.*;
+import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.Avg;
 import org.elasticsearch.search.aggregations.metrics.Max;
@@ -1216,6 +1217,148 @@ public class ElasticSearchTest
             System.out.println("----sum_price：" + sumPriceValue);
 
 
+            System.out.println("----------------------------------------");
+        }
+    }
+
+
+    /**
+     * 划分范围 histogram
+     * <p>
+     * 请求内容：
+     * <pre>
+     *
+     * GET /tvs/_search
+     * {
+     *   "query":
+     *   {
+     *     "match_all": {}
+     *   },
+     *   "size": 0,
+     *   "aggs":
+     *   {
+     *     "histogram_price":
+     *     {
+     *       "histogram":
+     *       {
+     *         "field": "price",
+     *         "interval": 2000
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     *
+     * 结果：
+     * <pre>
+     *
+     * {
+     *   "took" : 1,
+     *   "timed_out" : false,
+     *   "_shards" : {
+     *     "total" : 1,
+     *     "successful" : 1,
+     *     "skipped" : 0,
+     *     "failed" : 0
+     *   },
+     *   "hits" : {
+     *     "total" : {
+     *       "value" : 14,
+     *       "relation" : "eq"
+     *     },
+     *     "max_score" : null,
+     *     "hits" : [ ]
+     *   },
+     *   "aggregations" : {
+     *     "histogram_price" : {
+     *       "buckets" : [
+     *         {
+     *           "key" : 0.0,
+     *           "doc_count" : 3
+     *         },
+     *         {
+     *           "key" : 2000.0,
+     *           "doc_count" : 5
+     *         },
+     *         {
+     *           "key" : 4000.0,
+     *           "doc_count" : 3
+     *         },
+     *         {
+     *           "key" : 6000.0,
+     *           "doc_count" : 1
+     *         },
+     *         {
+     *           "key" : 8000.0,
+     *           "doc_count" : 2
+     *         }
+     *       ]
+     *     }
+     *   }
+     * }
+     *
+     * </pre>
+     *
+     * 程序结果：
+     * <pre>
+     *
+     * ----key：0.0
+     * ----doc_count：3
+     * ----------------------------------------
+     * ----key：2000.0
+     * ----doc_count：5
+     * ----------------------------------------
+     * ----key：4000.0
+     * ----doc_count：3
+     * ----------------------------------------
+     * ----key：6000.0
+     * ----doc_count：1
+     * ----------------------------------------
+     * ----key：8000.0
+     * ----doc_count：2
+     * ----------------------------------------
+     *
+     * </pre>
+     *
+     * @throws Exception
+     */
+    @Test
+    void aggregation5() throws Exception
+    {
+        //构建请求
+        SearchRequest searchRequest = new SearchRequest("tvs");
+        //构建请求体
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //查询
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        //分页
+        searchSourceBuilder.size(0);
+        //聚合
+        searchSourceBuilder.aggregation(
+                AggregationBuilders.histogram("histogram_price").field("price").interval(2000)
+        );
+
+        //放入到请求中
+        searchRequest.source(searchSourceBuilder);
+        //发起请求
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        //获取数据
+        //获取aggregations部分
+        Aggregations aggregations = searchResponse.getAggregations();
+        //获得histogram_price
+        Histogram histogram_price = aggregations.get("histogram_price");
+        //获取buckets部分
+        List<? extends Histogram.Bucket> buckets = histogram_price.getBuckets();
+        //遍历
+        for (Histogram.Bucket bucket : buckets)
+        {
+            //获取数据
+            Double key = (Double) bucket.getKey();
+            long docCount = bucket.getDocCount();
+            //打印
+            System.out.println("----key：" + key);
+            System.out.println("----doc_count：" + docCount);
             System.out.println("----------------------------------------");
         }
     }
