@@ -2453,64 +2453,64 @@ public class ElasticSearchTest
      *
      * ----key：红色
      * ----doc_count：5
-     * group_by_brand：
-     * --------key：红色
-     * --------doc_count：5
+     * ----group_by_brand：
+     * --------key：小米
+     * --------doc_count：1
      * --------avg_price：8500.0
      * -----------------------------
-     * --------key：红色
-     * --------doc_count：5
+     * --------key：三星
+     * --------doc_count：1
      * --------avg_price：8000.0
      * -----------------------------
-     * --------key：红色
-     * --------doc_count：5
+     * --------key：长虹
+     * --------doc_count：3
      * --------avg_price：1666.6666666666667
      * -----------------------------
      * ----------------------------------------
      * ----key：蓝色
      * ----doc_count：4
-     * group_by_brand：
-     * --------key：蓝色
-     * --------doc_count：4
+     * ----group_by_brand：
+     * --------key：三星
+     * --------doc_count：1
      * --------avg_price：6100.0
      * -----------------------------
-     * --------key：蓝色
-     * --------doc_count：4
+     * --------key：长虹
+     * --------doc_count：1
      * --------avg_price：4200.0
      * -----------------------------
-     * --------key：蓝色
-     * --------doc_count：4
+     * --------key：小米
+     * --------doc_count：1
      * --------avg_price：2500.0
      * -----------------------------
-     * --------key：蓝色
-     * --------doc_count：4
+     * --------key：TCL
+     * --------doc_count：1
      * --------avg_price：1500.0
      * -----------------------------
      * ----------------------------------------
      * ----key：绿色
      * ----doc_count：3
-     * group_by_brand：
-     * --------key：绿色
-     * --------doc_count：3
+     * ----group_by_brand：
+     * --------key：小米
+     * --------doc_count：2
      * --------avg_price：3750.0
      * -----------------------------
-     * --------key：绿色
-     * --------doc_count：3
+     * --------key：TCL
+     * --------doc_count：1
      * --------avg_price：1200.0
      * -----------------------------
      * ----------------------------------------
      * ----key：白色
      * ----doc_count：1
-     * group_by_brand：
-     * --------key：白色
+     * ----group_by_brand：
+     * --------key：TCL
      * --------doc_count：1
      * --------avg_price：2100.0
      * -----------------------------
      * ----------------------------------------
      * ----key：黑色
      * ----doc_count：1
-     * group_by_brand：
-     * --------key：黑色
+     * ----group_by_brand：
+     * --------key：小米
      * --------doc_count：1
      * --------avg_price：4800.0
      * -----------------------------
@@ -2561,7 +2561,7 @@ public class ElasticSearchTest
             //打印
             System.out.println("----key：" + key);
             System.out.println("----doc_count：" + docCount);
-            System.out.println("group_by_brand：");
+            System.out.println("----group_by_brand：");
             for (Terms.Bucket bucket1 : buckets1)
             {
                 //获取数据
@@ -2571,8 +2571,8 @@ public class ElasticSearchTest
                 Avg avg_price1 = bucket1.getAggregations().get("avg_price");
                 double avgPrice1Value = avg_price1.getValue();
                 //打印
-                System.out.println("--------key：" + key);
-                System.out.println("--------doc_count：" + docCount);
+                System.out.println("--------key：" + key1);
+                System.out.println("--------doc_count：" + docCount1);
                 System.out.println("--------avg_price：" + avgPrice1Value);
                 System.out.println("-----------------------------");
             }
